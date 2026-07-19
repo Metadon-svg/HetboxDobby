@@ -29,38 +29,38 @@ static bool parse_sethb(const char* msg, float* out_value) {
 void ShowLocalMessage(const char* text) {
     uintptr_t base = Utils::getAbsoluteAddress(Offsets::LIB_NAME, 0);
     if (base == 0) return;
-
+    
     void** chatVMPtr = (void**)(base + CHAT_VM_PTR);
     if (!chatVMPtr || !*chatVMPtr) {
         LOGI("ChatVM not found");
         return;
     }
-
+    
     void* chatVM = *chatVMPtr;
-
+    
     typedef void (*AddMessageFn)(void*, const char*, int, int, const char*, int);
     AddMessageFn addMsg = (AddMessageFn)(base + ADD_MESSAGE_ADDR);
-
+    
     addMsg(chatVM, text, 0, 2, "[MOD]", 0);
 }
 
 int hooked_send_chat(JNIEnv* env, jobject thiz, jstring msg) {
     const char* cmsg = env->GetStringUTFChars(msg, nullptr);
-
+    
     float multiplier;
     if (parse_sethb(cmsg, &multiplier)) {
         HitboxPatcher::ApplyCustom(multiplier);
-
+        
         char newMsg[64];
         snprintf(newMsg, sizeof(newMsg), "Хитбоксы: x%.1f", multiplier);
         ShowLocalMessage(newMsg);
-
+        
         env->ReleaseStringUTFChars(msg, cmsg);
         return 0;
     }
-
+    
     env->ReleaseStringUTFChars(msg, cmsg);
-
+    
     typedef int (*orig_fn)(JNIEnv*, jobject, jstring);
     return ((orig_fn)orig_send_chat)(env, thiz, msg);
 }
