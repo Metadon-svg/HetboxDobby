@@ -1,3 +1,4 @@
+#include <jni.h>
 #include "chat_hooks.h"
 #include "hook_manager.h"
 #include "../hitbox_patcher.h"
