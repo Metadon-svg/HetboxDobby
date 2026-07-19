@@ -1,8 +1,8 @@
 #include "chat_hooks.h"
 #include "hook_manager.h"
-#include "hitbox_patcher.h"
-#include "utils/library_utils.h"
-#include "memory/offsets.h"
+#include "../hitbox_patcher.h"
+#include "../utils/library_utils.h"
+#include "../memory/offsets.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
